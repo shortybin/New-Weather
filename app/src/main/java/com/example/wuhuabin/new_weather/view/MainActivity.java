@@ -1,7 +1,9 @@
-package com.example.wuhuabin.new_weather;
+package com.example.wuhuabin.new_weather.view;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.wuhuabin.new_weather.R;
 
 public class MainActivity extends AppCompatActivity {
 
