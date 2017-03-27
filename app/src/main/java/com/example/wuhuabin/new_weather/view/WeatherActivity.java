@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,6 +47,8 @@ public class WeatherActivity extends AppCompatActivity {
     private TextView sportText;
 
     private ImageView mBackImage;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private String weather_id;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -75,10 +78,12 @@ public class WeatherActivity extends AppCompatActivity {
         String weather = defaultSharedPreferences.getString("weather", null);
         if (weather != null) {
             Weather weather1 = Utility.hanlderWeatherResponse(weather);
+            weather_id=weather1.mBasic.weatherId;
             showWeatherInfo(weather1);
         } else {
             String weather_id = getIntent().getStringExtra("weather_id");
             weatherLayout.setVisibility(View.VISIBLE);
+            weather_id=weather_id;
             requsetWeather(weather_id);
         }
 
@@ -122,6 +127,15 @@ public class WeatherActivity extends AppCompatActivity {
         carWashText = (TextView) findViewById(R.id.car_wash_text);
         sportText = (TextView) findViewById(R.id.sport_text);
         mBackImage = (ImageView) findViewById(R.id.weather_back);
+        mSwipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipe_regresh);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //mSwipeRefreshLayout.setRefreshing(true);
+                requsetWeather(weather_id);
+            }
+        });
     }
 
     private void showWeatherInfo(Weather weather) {
@@ -176,6 +190,7 @@ public class WeatherActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Toast.makeText(WeatherActivity.this, "获取天气信息失败", Toast.LENGTH_LONG).show();
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
                 });
             }
@@ -198,6 +213,9 @@ public class WeatherActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(WeatherActivity.this, "获取天气信息失败", Toast.LENGTH_LONG).show();
                         }
+
+                        mSwipeRefreshLayout.setRefreshing(false);
+
                     }
                 });
             }
