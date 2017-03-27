@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import com.example.wuhuabin.new_weather.db.City;
 import com.example.wuhuabin.new_weather.db.County;
 import com.example.wuhuabin.new_weather.db.Province;
+import com.example.wuhuabin.new_weather.gson.Weather;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -75,6 +77,18 @@ public class Utility {
             }
         }
         return false;
+    }
+
+    public static Weather hanlderWeatherResponse(String string){
+        try {
+            JSONObject jsonObject=new JSONObject(string);
+            JSONArray heWeather = jsonObject.getJSONArray("HeWeather");
+            String s = heWeather.getJSONObject(0).toString();
+            return new Gson().fromJson(s,Weather.class);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
