@@ -1,5 +1,6 @@
 package com.example.wuhuabin.new_weather.view;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -24,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.example.wuhuabin.new_weather.R;
 import com.example.wuhuabin.new_weather.gson.Forecast;
 import com.example.wuhuabin.new_weather.gson.Weather;
+import com.example.wuhuabin.new_weather.service.AutoUpdateService;
 import com.example.wuhuabin.new_weather.util.HttpUtil;
 import com.example.wuhuabin.new_weather.util.Utility;
 
@@ -192,6 +194,13 @@ public class WeatherActivity extends AppCompatActivity {
         sportText.setText(sport);
 
         weatherLayout.setVisibility(View.VISIBLE);
+
+        if (weather!=null&&"ok".equals(weather.status)){
+            Intent intent=new Intent(WeatherActivity.this, AutoUpdateService.class);
+            startService(intent);
+        }else{
+            Toast.makeText(WeatherActivity.this,"获取天气失败",Toast.LENGTH_LONG).show();
+        }
 
     }
 
