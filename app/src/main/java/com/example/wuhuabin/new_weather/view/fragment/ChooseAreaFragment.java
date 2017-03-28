@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.example.wuhuabin.new_weather.db.Province;
 import com.example.wuhuabin.new_weather.gson.Weather;
 import com.example.wuhuabin.new_weather.util.HttpUtil;
 import com.example.wuhuabin.new_weather.util.Utility;
+import com.example.wuhuabin.new_weather.view.MainActivity;
 import com.example.wuhuabin.new_weather.view.WeatherActivity;
 
 import org.litepal.crud.DataSupport;
@@ -88,11 +90,22 @@ public class ChooseAreaFragment extends Fragment {
                     queryCounty();
                 }else if (currentLevel==LEVEL_COUNTY){
                     String weatherId = mCountys.get(position).getWeatherId();
-                    Intent intent=new Intent(getActivity(), WeatherActivity.class);
-                    intent.putExtra("weather_id",weatherId);
-                    startActivity(intent);
-                    getActivity().finish();
 
+                    if (getActivity()!=null){
+                        FragmentActivity activity = getActivity();
+                        if (activity instanceof MainActivity){
+                            Intent intent=new Intent(getActivity(), WeatherActivity.class);
+                            intent.putExtra("weather_id",weatherId);
+                            startActivity(intent);
+                            activity.finish();
+                        }else if (activity instanceof WeatherActivity){
+                            WeatherActivity weatherActivity= (WeatherActivity) activity;
+                            weatherActivity.mDrawerLayout.closeDrawers();
+                            weatherActivity.weather_id=weatherId;
+                            weatherActivity.mSwipeRefreshLayout.setRefreshing(true);
+                            weatherActivity.requsetWeather(weatherId);
+                        }
+                    }
                 }
             }
         });
