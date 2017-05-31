@@ -11,10 +11,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import rx.Observable;
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-
 /**
  * Created by wuhuabin on 2017/3/22.
  */
@@ -37,7 +33,7 @@ public class HttpUtil {
         Retrofit retrofit=new Retrofit.Builder().baseUrl(address).addConverterFactory(GsonConverterFactory.create()).build();
         RequestService requestService = retrofit.create(RequestService.class);
 
-        requestService.sendRequset().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).
+        /*requestService.sendRequset().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).
                 subscribe(new Observer<String>() {
                     @Override
                     public void onCompleted() {
@@ -54,7 +50,7 @@ public class HttpUtil {
 
                     }
                 });
-
+*/
 
     }
 
@@ -62,5 +58,6 @@ public class HttpUtil {
         @GET("/")
         Observable<String> sendRequset();
     }
+
 
 }
