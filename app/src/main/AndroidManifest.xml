@@ -27,6 +27,9 @@
             android:enabled="true"
             android:exported="true">
         </service>
+
+        <activity android:name=".main.HomeActivity">
+        </activity>
     </application>
 
 </manifest>
